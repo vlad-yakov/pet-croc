@@ -165,9 +165,7 @@ import vuetify from './plugins/vuetify'
           const showStart = event.start.hour < 12 && event.end.hour >= 12;
           const start = cal.formatTime(event.start, showStart);
           const end = cal.formatTime(event.end, true);
-          const singline =
-            diffMinutes(event.start, event.end) <=
-            this.parsedEventOverlapThreshold;
+          const singline = (event.start, event.end) <= this.parsedEventOverlapThreshold;
           const separator = singline ? ", " : "<br>";
           return `<strong>${name}</strong>${separator}${start} - ${end}`;
         } else {
@@ -249,7 +247,7 @@ import vuetify from './plugins/vuetify'
         this.createEvent.end = this.toTimestamp(new Date(max));
       }
     },
-    endDrag(e) {
+    endDrag() {
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
@@ -258,7 +256,7 @@ import vuetify from './plugins/vuetify'
 
       this.lastEvent = "endDrag";
     },
-    cancelDrag(e) {
+    cancelDrag() {
       if (this.createEvent) {
         if (this.extendOriginal) {
           this.createEvent.end = this.extendOriginal;
