@@ -1,79 +1,105 @@
-<template>
-<div id="app">
-  <v-app id="inspire">
-    <div>
-      <v-sheet tile height="54" color="grey lighten-3" class="d-flex">
-        <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-select v-model="type" :items="types" dense outlined hide-details class="ma-2" label="type"></v-select>
-        <v-select v-model="mode" :items="modes" dense outlined hide-details label="event-overlap-mode" class="ma-2"></v-select>
-        <v-select v-model="weekday" :items="weekdays" dense outlined hide-details label="weekdays" class="ma-2"></v-select>
-        <v-spacer></v-spacer>
-        <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </v-sheet>
-      <v-sheet height="600">
-        <v-calendar ref="calendar" v-model="value" :weekdays="weekday" :type="type" :events="events" :event-overlap-mode="mode" :event-overlap-threshold="60" :event-color="getEventColor" :event-ripple="false" @change="getEvents" @mousedown:event="startDrag" @mousedown:time="startTime" @mousemove:time="mouseMove" @mouseup:time="endDrag" @mouseleave.native="cancelDrag">
-          <template #event="{ event, timed }">
-            <div class="pl-1" v-html="getEventHTML(event, timed)"></div>
-            <div v-if="timed" class="v-event-drag-bottom" @mousedown.stop="extendBottom(event)"></div>
-          </template>
-          <template #day-body="{ date, week }">
-            <div class="v-current-time" :class="{ first: date === week[0].date }" :style="{ top: nowY }">
-              <div class="v-current-time-time">
-                {{ nowTime }}
-              </div>
+<template id="calendar">
+  <div id="inspire">
+    <v-sheet tile height="54" color="grey lighten-3" class="d-flex">
+      <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <v-select
+        v-model="type"
+        :items="types"
+        dense
+        outlined
+        hide-details
+        class="ma-2"
+        label="type"
+      ></v-select>
+      <v-select
+        v-model="mode"
+        :items="modes"
+        dense
+        outlined
+        hide-details
+        label="event-overlap-mode"
+        class="ma-2"
+      ></v-select>
+      <v-select
+        v-model="weekday"
+        :items="weekdays"
+        dense
+        outlined
+        hide-details
+        label="weekdays"
+        class="ma-2"
+      ></v-select>
+      <v-spacer></v-spacer>
+      <v-btn icon class="ma-2" @click="$refs.calendar.next()">
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+    </v-sheet>
+    <v-sheet height="600">
+      <v-calendar
+        ref="calendar"
+        v-model="value"
+        :weekdays="weekday"
+        :type="type"
+        :events="events"
+        :event-overlap-mode="mode"
+        :event-overlap-threshold="60"
+        :event-color="getEventColor"
+        :event-ripple="false"
+        @change="getEvents"
+        @mousedown:event="startDrag"
+        @mousedown:time="startTime"
+        @mousemove:time="mouseMove"
+        @mouseup:time="endDrag"
+        @mouseleave.native="cancelDrag"
+      >
+        <template #event="{ event, timed }">
+          <div class="pl-1" v-html="getEventHTML(event, timed)"></div>
+          <div
+            v-if="timed"
+            class="v-event-drag-bottom"
+            @mousedown.stop="extendBottom(event)"
+          ></div>
+        </template>
+        <template #day-body="{ date, week }">
+          <div
+            class="v-current-time"
+            :class="{ first: date === week[0].date }"
+            :style="{ top: nowY }"
+          >
+            <div class="v-current-time-time">
+              {{ nowTime }}
             </div>
-          </template>
-          &nbsp;
-        </v-calendar>
-        <!--         {{ lastEvent }} -->
-      </v-sheet>
-    </div>
-  </v-app>
-</div>
+          </div>
+        </template>
+      </v-calendar>
+      <!--         {{ lastEvent }} -->
+    </v-sheet>
+  </div>
 </template>
 
 <script>
-import vuetify from './plugins/vuetify'
-    export default {
-  el: "#app",
+import vuetify from "../plugins/vuetify";
+import Vue from "vue";
+new Vue({
+  el: "#calendar",
   vuetify: new vuetify(),
   data: () => ({
     type: "day",
-    types: ["month", "week", "day", "4day"],
+    types: ["month", "week", "day"],
     mode: "stack",
     modes: ["stack", "column"],
     weekday: [0, 1, 2, 3, 4, 5, 6],
     weekdays: [
-      { text: "Sun - Sat", value: [0, 1, 2, 3, 4, 5, 6] },
       { text: "Mon - Sun", value: [1, 2, 3, 4, 5, 6, 0] },
       { text: "Mon - Fri", value: [1, 2, 3, 4, 5] },
-      { text: "Mon, Wed, Fri", value: [1, 3, 5] }
     ],
     value: "",
     events: [],
-    colors: [
-      "#2196F3",
-      "#3F51B5",
-      "#673AB7",
-      "#00BCD4",
-      "#4CAF50",
-      "#FF9800",
-      "#757575"
-    ],
-    names: [
-      "Meeting",
-      "Holiday",
-      "PTO",
-      "Travel",
-      "Event",
-      "Birthday",
-      "Conference",
-      "Party"
-    ],
+    colors: [],
+
+    names: [],
 
     dragEvent: null,
     dragStart: null,
@@ -82,8 +108,9 @@ import vuetify from './plugins/vuetify'
     createStart: null,
     extendOriginal: null,
 
-    isMounted: false
+    isMounted: false,
   }),
+
   computed: {
     nowY() {
       const cal = this.$refs.calendar;
@@ -100,8 +127,9 @@ import vuetify from './plugins/vuetify'
       }
 
       return cal.formatTime(cal.times.now);
-    }
+    },
   },
+
   mounted() {
     const cal = this.$refs.calendar;
 
@@ -139,7 +167,7 @@ import vuetify from './plugins/vuetify'
           name: this.names[this.rnd(0, this.names.length - 1)],
           start: this.formatDate(first, !allDay),
           end: this.formatDate(second, !allDay),
-          color: this.colors[this.rnd(0, this.colors.length - 1)]
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
         });
       }
 
@@ -165,7 +193,8 @@ import vuetify from './plugins/vuetify'
           const showStart = event.start.hour < 12 && event.end.hour >= 12;
           const start = cal.formatTime(event.start, showStart);
           const end = cal.formatTime(event.end, true);
-          const singline = (event.start, event.end) <= this.parsedEventOverlapThreshold;
+          const singline =
+            (event.start, event.end) <= this.parsedEventOverlapThreshold;
           const separator = singline ? ", " : "<br>";
           return `<strong>${name}</strong>${separator}${start} - ${end}`;
         } else {
@@ -210,8 +239,9 @@ import vuetify from './plugins/vuetify'
           name: "(no title)",
           start: this.toTimestamp(new Date(this.createStart)),
           end: this.toTimestamp(new Date(this.createStart)),
-          color: this.colors[this.rnd(0, this.colors.length - 1)]
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
         };
+
         this.events.push(this.createEvent);
       }
       this.lastEvent = "startTime";
@@ -291,9 +321,9 @@ import vuetify from './plugins/vuetify'
       return `${date.getFullYear()}-${
         date.getMonth() + 1
       }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
-    }
-  } 
-    }
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>

@@ -1,10 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-    >
+    <v-app-bar app>
       <div class="d-flex align-center">
-        <v-img/>
+        <v-img />
 
         <v-img
           alt="croc-name"
@@ -17,30 +15,24 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href=""
-        target="_blank"
->
-        <v-icon>
-          mdi-magnify 
-          color="black"
-          </v-icon>
+      <v-btn href="" target="_blank">
+        <v-icon> mdi-magnify color="black" </v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <calendar> </calendar>
     </v-main>
   </v-app>
 </template>
 
 <script>
-
+import calendar from "./components/calendar.vue";
 export default {
-  name: 'App',
-
-  data: () => ({
-    //
-  }),
+  name: "App",
+  data: () => ({}),
+  components: {
+    calendar,
+  },
 };
 </script>
