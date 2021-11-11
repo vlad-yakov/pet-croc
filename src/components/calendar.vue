@@ -82,9 +82,8 @@
 <script>
 import vuetify from "../plugins/vuetify";
 import Vue from "vue";
-new Vue({
+export default new Vue({
   el: "#calendar",
-  vuetify: new vuetify(),
   data: () => ({
     type: "day",
     types: ["month", "week", "day"],
@@ -120,6 +119,7 @@ new Vue({
 
       return cal.timeToY(cal.times.now) + "px";
     },
+
     nowTime() {
       const cal = this.$refs.calendar;
       if (!cal && !this.isMounted) {
@@ -130,23 +130,6 @@ new Vue({
     },
   },
 
-  mounted() {
-    const cal = this.$refs.calendar;
-
-    window.Vuetify = vuetify;
-    window.app = this;
-    window.cal = cal;
-
-    this.isMounted = true;
-
-    // scroll to the current time
-    const minutes = cal.times.now.hour * 60 + cal.times.now.minute;
-    const firstTime = Math.max(0, minutes - (minutes % 30) - 30);
-    cal.scrollToTime(firstTime);
-
-    // every minute update the current time bar
-    setInterval(() => cal.updateTimes(), 60 * 1000);
-  },
   methods: {
     getEvents({ start, end }) {
       const events = [];
@@ -323,7 +306,25 @@ new Vue({
       }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     },
   },
-});
+
+  mounted() {
+    const cal = this.$refs.calendar;
+
+    window.Vuetify = vuetify;
+    window.app = this;
+    window.cal = cal;
+
+    this.isMounted = true;
+
+    // scroll to the current time
+    const minutes = cal.times.now.hour * 60 + cal.times.now.minute;
+    const firstTime = Math.max(0, minutes - (minutes % 30) - 30);
+    cal.scrollToTime(firstTime);
+
+    // every minute update the current time bar
+    setInterval(() => cal.updateTimes(), 60 * 1000);
+  },
+}).$el;
 </script>
 
 <style lang="scss" scoped>
