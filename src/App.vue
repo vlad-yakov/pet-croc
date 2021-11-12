@@ -21,18 +21,18 @@
     </v-app-bar>
 
     <v-main>
-      <calendar> </calendar>
+      <graph />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import calendar from "./components/calendar.vue";
+import graph from "./components/graph";
 export default {
   name: "App",
   data: () => ({}),
   components: {
-    calendar,
+    graph,
   },
 };
 </script>
