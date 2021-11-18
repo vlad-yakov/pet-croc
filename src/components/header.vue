@@ -1,22 +1,28 @@
 <template>
-  <v-app-bar-title>
-    <h3>vlad</h3>
-  </v-app-bar-title>
+  <v-app-bar app>
+    <div class="d-flex align-center">
+      <v-img
+        alt="croc-name"
+        contain
+        min-width="100"
+        src="..\assets\croc-name.svg"
+        width="100"
+      />
+    </div>
+
+    <v-spacer></v-spacer>
+
+    <v-btn href="" target="_blank">
+      <v-icon> mdi-magnify color="black" </v-icon>
+    </v-btn>
+  </v-app-bar>
 </template>
 
 <script>
-export default {
-  name: "header",
-};
+import Vue from "vue";
+export default Vue.component("header", {
+  data: () => ({
+    projectName: "Здесь имя проекта",
+  }),
+});
 </script>
-
-<style lang="scss" scoped>
-.v-btn {
-  margin: 0.3em;
-  color: "#00a460";
-
-  &.v-icon {
-    background-color: "#00a460";
-  }
-}
-</style>

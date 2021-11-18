@@ -9,12 +9,21 @@
 
           <v-toolbar-title>{{ title }}</v-toolbar-title>
 
-          <v-btn color="#00A460" dark @click.stop="dialog = true"
-            >Создать событие</v-btn
-          >
-          <v-btn outlined class="md-3" @click="setToday">
-            Текущая неделя
-          </v-btn>
+          <div class="createEv">
+            <v-btn
+              color="#00A460"
+              dark
+              @click.stop="dialog = true"
+              margin="0.5em"
+              >Создать событие</v-btn
+            >
+          </div>
+
+          <div class="curWeek">
+            <v-btn outlined class="md-3" @click="setToday" margin="0.5em">
+              Текущая неделя
+            </v-btn>
+          </div>
 
           <div class="flex-grow-1"></div>
           <v-menu bottom right>
@@ -26,13 +35,13 @@
             </template>
             <v-list>
               <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
+                <v-list-item-title>Неделя</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
+                <v-list-item-title>Месяц</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = '4day'">
-                <v-list-item-title>4 days</v-list-item-title>
+                <v-list-item-title>5/2</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -73,7 +82,7 @@
               ></v-text-field>-->
               <v-btn
                 type="submit"
-                color="primary"
+                color="#00A460"
                 class="mr-4"
                 @click.stop="dialog = false"
               >
@@ -111,11 +120,11 @@
               <v-text-field
                 v-model="color"
                 type="color"
-                label="color (click to open color menu)"
+                label="Цвет (Нажмите, чтобы открыть палитру)"
               ></v-text-field>
               <v-btn
                 type="submit"
-                color="primary"
+                color="#00A460"
                 class="mr-4"
                 @click.stop="dialog = false"
               >
@@ -130,7 +139,7 @@
         <v-calendar
           ref="calendar"
           v-model="focus"
-          color="primary"
+          color="#00A460"
           :events="events"
           :event-color="getEventColor"
           :event-margin-bottom="3"
@@ -202,16 +211,19 @@
 </template>
 
 <script>
-import { db } from "@/main";
-export default {
+import Vue from "vue";
+import db from "@/main";
+
+export default Vue.component("graph", {
   // данные должны быть связаны с проектом
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),
     type: "week",
     typeToLabel: {
-      month: "Month",
-      week: "Week",
+      month: "Месяц",
+      week: "Неделя",
+      "4day": "5/2",
     },
     names: [{ name: null }], //массив данных с сотрудниками по проекту
     start: null,
@@ -227,6 +239,15 @@ export default {
   }),
   mounted() {
     this.getEvents();
+
+    const cal = this.$refs.calendar;
+    // scroll to the current time
+    const minutes = cal.times.now.hour * 60 + cal.times.now.minute;
+    const firstTime = Math.max(0, minutes - (minutes % 30) - 30);
+    cal.scrollToTime(firstTime);
+
+    // every minute update the current time bar
+    setInterval(() => cal.updateTimes(), 60 * 1000);
   },
   computed: {
     title() {
@@ -338,44 +359,24 @@ export default {
     updateRange({ start, end }) {
       this.start = start;
       this.end = end;
-    }, //здесь метод для устанвки окончания недель
+    }, //здесь метод для устанoвки окончания недель
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
+.createEv {
+  margin: 0.5em;
+}
+
+.curWeek {
+  margin: 0.5em;
+}
 .v-calendar {
   user-select: none;
   -webkit-user-select: none;
 }
 
-.v-toolbar-title {
-  background: navy;
-}
-
-.v-event-drag-bottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 4px;
-  height: 4px;
-  cursor: ns-resize;
-}
-.v-event-drag-bottom::after {
-  display: none;
-  position: absolute;
-  left: 50%;
-  height: 4px;
-  border-top: 1px solid white;
-  border-bottom: 1px solid white;
-  width: 20px;
-  margin-left: -10px;
-  opacity: 0.8;
-  content: "";
-}
-.v-event-timed:hover .v-event-drag-bottom::after {
-  display: block;
-}
 .v-current-time {
   height: 1px;
   background-color: red;
@@ -412,5 +413,9 @@ export default {
     text-align: right;
     top: -9px;
   }
+}
+
+v-form v-btn {
+  color: "white";
 }
 </style>
