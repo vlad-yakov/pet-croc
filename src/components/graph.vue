@@ -8,6 +8,7 @@
           </v-btn>
 
           <v-toolbar-title>{{ title }}</v-toolbar-title>
+
           <v-btn color="#00A460" dark @click.stop="dialog = true"
             >Создать событие</v-btn
           >
@@ -139,7 +140,8 @@
           @click:more="viewDay"
           @click:date="setDialogDate"
           @change="updateRange"
-        ></v-calendar>
+        >
+        </v-calendar>
         <v-menu
           v-model="selectedOpen"
           :close-on-content-click="false"
@@ -206,7 +208,7 @@ export default {
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),
-    type: "month",
+    type: "week",
     typeToLabel: {
       month: "Month",
       week: "Week",
@@ -233,31 +235,29 @@ export default {
         return "";
       }
       const startMonth = this.monthFormatter(start);
-      const endMonth = this.monthFormatter(end);
-      const suffixMonth = startMonth === endMonth ? "" : endMonth;
       const startYear = start.year;
-      const endYear = end.year;
-      const suffixYear = startYear === endYear ? "" : endYear;
-      const startDay = start.day + this.nth(start.day);
-      const endDay = end.day + this.nth(end.day);
+      const startDay = start.day;
+      const endDay = end.day;
       switch (this.type) {
         case "month":
-          return `${startMonth} ${startYear}`;
+          return `${startYear}, \n${startMonth}`;
         case "week":
-        case "4day":
-          return `${startMonth} ${startDay} ${startYear} - ${suffixMonth} ${endDay} ${suffixYear}`;
+          return `${startYear}, \n${startMonth}: ${startDay} - ${endDay}`;
         case "day":
-          return `${startMonth} ${startDay} ${startYear}`;
+          return `${startYear}, \n${startMonth} ${startDay}`;
+        case "4day":
+          return `${startYear}, \n${startMonth}: ${startDay} - ${endDay}`;
       }
       return "";
     },
     monthFormatter() {
       return this.$refs.calendar.getFormatter({
-        timeZone: "UTC",
+        timeZone: `UTC`,
         month: "long",
       });
     },
   },
+
   methods: {
     async getEvents() {
       let snapshot = await db.collection("calEvent").get();
@@ -305,7 +305,7 @@ export default {
           (this.end = ""),
           (this.color = "");
       } else {
-        alert("You must enter event name, start, and end time");
+        alert("Вам необходимо ввести имя события, время его начала и конца");
       }
     },
     editEvent(ev) {
@@ -338,12 +338,7 @@ export default {
     updateRange({ start, end }) {
       this.start = start;
       this.end = end;
-    },
-    nth(d) {
-      return d > 3 && d < 21
-        ? "th"
-        : ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"][d % 10];
-    },
+    }, //здесь метод для устанвки окончания недель
   },
 };
 </script>
@@ -353,6 +348,11 @@ export default {
   user-select: none;
   -webkit-user-select: none;
 }
+
+.v-toolbar-title {
+  background: navy;
+}
+
 .v-event-drag-bottom {
   position: absolute;
   left: 0;

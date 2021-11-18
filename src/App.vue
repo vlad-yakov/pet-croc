@@ -1,25 +1,8 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <div class="d-flex align-center">
-        <v-img />
-
-        <v-img
-          alt="croc-name"
-          contain
-          min-width="100"
-          src=".\assets\croc-name.svg"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn href="" target="_blank">
-        <v-icon> mdi-magnify color="black" </v-icon>
-      </v-btn>
+      <header />
     </v-app-bar>
-
     <v-main>
       <graph />
     </v-main>
@@ -27,11 +10,14 @@
 </template>
 
 <script>
+import header from "./components/header";
 import graph from "./components/graph";
+
 export default {
   name: "App",
   data: () => ({}),
   components: {
+    header,
     graph,
   },
 };
