@@ -1,6 +1,6 @@
 <template>
   <div id="graph">
-    <v-sheet height="54" color="grey lighten-4" class="d-flex">
+    <v-sheet app height="54" color="grey lighten-4" class="d-flex">
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
@@ -32,6 +32,7 @@
 
     <v-sheet height="84vh">
       <v-calendar
+        app
         locale="ru"
         ref="calendar"
         v-model="focus"
