@@ -1,41 +1,45 @@
 <template>
-  <v-app-bar app flat>
-    <div class="d-flex align-center">
-      <v-img
-        alt="croc-name"
-        contain
-        min-width="100"
-        src="..\assets\croc-name.svg"
-        width="100"
-      />
-    </div>
+  <div>
+    <v-app-bar app flat>
+      <div class="d-flex align-center">
+        <v-img
+          alt="croc-name"
+          contain
+          min-width="100"
+          src="..\assets\croc-name.svg"
+          width="100"
+        />
+      </div>
 
-    <v-toolbar-title class="p_name">
-      {{ title }}
-    </v-toolbar-title>
+      <v-toolbar-title class="p_name">
+        {{ title }}
+      </v-toolbar-title>
 
-    <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
 
-    <v-btn href="" target="_blank" color="#00A460">
-      <v-icon color="white"> mdi-file-plus-outline </v-icon>
-    </v-btn>
+      <v-btn href="" target="_blank" color="#00A460">
+        <v-icon color="white"> mdi-file-plus-outline </v-icon>
+      </v-btn>
 
-    <v-btn href="" target="_blank" color="#00A460">
-      <v-icon color="white"> mdi-note-edit-outline </v-icon>
-    </v-btn>
-
-    <v-search></v-search>
-  </v-app-bar>
+      <v-btn href="" target="_blank" color="#00A460">
+        <v-icon color="white"> mdi-note-edit-outline </v-icon>
+      </v-btn>
+      <v-search></v-search>
+    </v-app-bar>
+  </div>
 </template>
 
 <script>
 import Vue from "vue";
-import search from "./search.vue";
+import search from "./search";
+
 export default Vue.component("v-header", {
   components: search,
+
   props: ["title"],
   data: () => ({
     "--castSize": null,
+    search: false,
   }),
   computed: {
     //динамически изменяет размер шрифта
@@ -73,7 +77,7 @@ export default Vue.component("v-header", {
   font-size: calc(var(--castSize) * 1px);
 }
 
-.v-app-bar {
+.v-toolbar {
   font-family: CrocBold;
   border-bottom: 3px solid #00a460;
 }
