@@ -78,6 +78,7 @@
 <script>
 import Vuetify from "../plugins/vuetify";
 import Vue from "vue";
+import db from "@/main";
 
 export default Vue.component("graph", {
   // данные должны быть связаны с проектом
@@ -92,9 +93,9 @@ export default Vue.component("graph", {
     selectedOpen: false,
 
     focus: "",
-    events: [],
-    colors: ["#2196F3", "#3F51B5", "#673AB7"],
-    names: ["Meeting", "Holiday", "PTO"],
+    events: [], //метод для получения их с бд
+    colors: [], //метод для получения их с бд
+    names: [], //метод для получения их с бд
 
     dragEvent: null,
     dragStart: null,
@@ -144,6 +145,17 @@ export default Vue.component("graph", {
     setInterval(() => cal.updateTimes(), 60 * 1000);
   },
   methods: {
+    async giveEvents() {
+      //вызов события из бд
+      let snapshot = await db.collection("calEvent").get();
+      const events = [];
+      snapshot.forEach((doc) => {
+        let appData = doc.data();
+        appData.id = doc.id;
+        events.push(appData);
+      });
+      this.events = events;
+    },
     getEvents({ start, end }) {
       const events = [];
 

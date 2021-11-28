@@ -1,8 +1,10 @@
 <template>
   <v-app @wheel.prevent @touchmove.prevent @scroll.prevent>
     <v-main>
-      <v-header></v-header>
-      <graph></graph>
+      <v-sheet>
+        <v-header></v-header>
+        <graph></graph
+      ></v-sheet>
     </v-main>
   </v-app>
 </template>

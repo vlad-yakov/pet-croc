@@ -1,32 +1,21 @@
 <template>
   <div class="search">
-    <v-dialog
-      height="500px"
-      width="400px"
-      transition="scroll-x-reverse-transition"
-      origin="top left"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          v-bind="attrs"
-          v-on="on"
-          color="#00A460"
-          @click.stop="search = true"
-        >
-          <v-icon color="white"> mdi-magnify </v-icon>
-        </v-btn>
-      </template>
+    <template>
+      <v-btn color="#00A460" dark @click.stop="search = !search">
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+    </template>
 
-      <v-card>
-        <v-card-action>
-          <v-input :names="[]" :projects="[]" width="90px"></v-input>
-          <v-btn dark color="#00A460">
-            <v-text> Найти </v-text>
-          </v-btn>
-          <h3>Мои проекты:</h3>
-        </v-card-action>
-      </v-card>
-    </v-dialog>
+    <v-navigation-drawer v-model="search" temporary :right="right">
+      <v-input :names="[]" :projects="[]" width="90px"></v-input>
+      <v-btn dark color="#00A460">
+        <v-text> Найти </v-text>
+      </v-btn>
+      <hr />
+      <h3>Мои проекты:</h3>
+
+      <v-list dense> </v-list>
+    </v-navigation-drawer>
   </div>
 </template>
 
