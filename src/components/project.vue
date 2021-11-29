@@ -1,7 +1,7 @@
 <template>
   <!--окно создания проекта-->
 
-  <v-dialog v-model="dialog" max-width="500">
+  <v-dialog v-model="createProj" max-width="500">
     <v-card>
       <v-container>
         <v-form @submit.prevent="addEvent">
@@ -34,7 +34,7 @@
             type="submit"
             color="#00A460"
             class="mr-4"
-            @click.stop="dialog = false"
+            @click.stop="createProj = false"
           >
             Создать
           </v-btn>

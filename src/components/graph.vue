@@ -49,7 +49,7 @@
         @mousemove:time="mouseMove"
         @mouseup:time="endDrag"
         @mouseleave.native="cancelDrag"
-      >
+        ><!--по клику на сетке графика появляется график создания проекта-->
         <template #event="{ event, timed }">
           <div class="pl-1" v-html="getEventHTML(event, timed)"></div>
           <div
